@@ -30,18 +30,21 @@ from person import *
 def main():
     '''main function for simulating a game of blackjack'''
     game = Game()
+    deck = Deck()
+    deck.shuffle()
     
     #initialize each player and dealer
     num_of_players = int(input("Enter number of players: "))
     for i in range(num_of_players):
         ("player"+str(i)) = Person()
+        ("player"+str(i)).
+        game.addPlayer += ["player"+str(i)]
     dealer = Dealer()
-    game.givePlayers()
-    players = game.players
+    players = game.getPlayerList
 
     #give each player an initial hand
-    for i in players:
-        i.startHand()
+    for i in range(num_of_players):
+        .startHand()
     dealer.startHand()
         
     #loop until there is a winner
@@ -49,7 +52,7 @@ def main():
     while True:
         if turns == 0:
             for i in players: #does anyone have blackjack?
-                game.isThereWinner(i,dealer)
+                game.isThereBlackjack(i,dealer)
         if game.stillPlaying() is True: #continue game
             dealer.showHand()
             #loop to decide whether to hit+continue or stay
