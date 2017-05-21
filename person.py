@@ -41,6 +41,8 @@ class Person():
         return score
     def addCard(self,card):
         self.hand += str(card)
+    def clearHand(self):
+        self.hand = ''
     def getHand(self):
         return self.hand
 
@@ -57,7 +59,9 @@ class Player(Person):
         return self.bet
     def addMoney(self,money):
         self.money += money
-    def Money(self):
+    def subMoney(self,money):
+        self.money -= money
+    def getMoney(self):
         return self.money
     def hit(self):
         pass
@@ -65,24 +69,27 @@ class Player(Person):
         pass
     def split(self):
         pass
-    def blackjack(self,val="False"):
+    def blackjack(self,val):
         self.blackjack = val
-    def play(self,i):
+    def play(self,i,deck):
         '''plays all turns for one player'''
         turn = 0
-        while True: #loop for each player turn
+        endTurn = False
+        while endTurn is False: #loop for each player turn
             hand = self.getHand()
             handValue = self.highestScore()
             if turn == 0:
                 if handValue == 21:
-                    self.blackjack(True)
-            endTurn = False
+                    self.blackjack = True
+                    print("Player"+str(i)+", your hand is: "+hand[0]+', '+hand[1])
+                    print("You have a blackjack!")
+                    endTurn = True
             split = False
             if (handValue < 21) and (endTurn is False) and (split is False): #play turn
-                print("Player"+str(i)+", your hand is: "+hand)
+                print("Player"+str(i)+", your hand is: "+hand[0]+', '+hand[1])
                 print("Player"+str(i)+", your hand value is: "+str(handValue))
                 #decide whether to hit/stay/double/split
-                decision = str(input("Will you hit, stay, double, or split? (please enter exact word)"))
+                decision = str(input("Will you hit, stay, double, or split? (please enter exact word): "))
                 if decision == "hit":
                     self.hit()
                 elif decision == "double":
@@ -104,12 +111,12 @@ class Dealer(Person):
     def __init__(self):
         self.hand = ''
         super().__init__()
-    def playTurn(self):
+    def playTurn(self,deck):
         while True:
             if self.highestScore() >= 17:
                 return False
             else:
-                pass 
-                
-            
-            
+                card = deck.pop()
+                self.addCard(card)
+                dhand = self.getHand()
+                print("Dealer picks card...")

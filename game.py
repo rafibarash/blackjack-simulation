@@ -13,6 +13,7 @@ class Game():
     def __init__(self):
         self.players = []
         self.dealer = None
+        self.num_of_players = 0
     def setDealer(self,dealer):
         self.dealer = dealer
     def getDealer(self):
@@ -27,25 +28,42 @@ class Game():
         self.players = newPlayerList
     def getPlayerList(self):
         return self.players
-    def winner(self,player,dealer):
+    def setNumOfPlayers(self,num):
+        self.num_of_players = num
+    def getNumOfPlayers(self):
+        return self.num_of_players
+    def winner(self,player,dealer,index):
         pvalue = player.highestScore()
         dvalue = dealer.highestScore()
-        if pvalue > dvalue: #player wins
-            print(p+" wins!")
-            bet = p.getBet()
-            p.addMoney(bet)
-            new_money = p.getMoney()
-            print(p+" has a balance of $"+str(new_money))
-        elif dvalue > pvalue: #dealer wins
-            print(p+" loses :(")
-            bet = p.getBet()
-            p.addMoney(bet)
-            new_money = p.getMoney()
-            print(p+" has a balance of $"+str(new_money))
-        else:#tie
-            print(p+" ties.")
-            print(p+" has a balance of $"+str(new_money))
-
+        if pvalue > dvalue and pvalue <= 21: #player wins
+            print("Player"+str(index)+" wins!")
+            bet = player.getBet()
+            player.addMoney(bet)
+            new_money = player.getMoney()
+            print("Player"+str(index)+" has a balance of $"+str(new_money))
+        elif dvalue > pvalue and dvalue <= 21: #dealer wins
+            print("Player"+str(index)+" loses :(")
+            bet = player.getBet()
+            player.subMoney(bet)
+            new_money = player.getMoney()
+            print("Player"+str(index)+" has a balance of $"+str(new_money))
+        elif pvalue == dvalue and pvalue <= 21 and dvalue <= 21: #tie
+            print("Player"+str(index)+" ties.")
+            print("Player"+str(index)+" has a balance of $"+str(new_money))
+        else: #bust
+            if pvalue <= 21 and dvalue > 21: #dealer busts and player doesn't
+                print("Dealer busts. Player"+str(index)+" wins!")
+                bet = player.getBet()
+                player.addMoney(bet)
+                new_money = player.getMoney()
+                print("Player"+str(index)+" has a balance of $"+str(new_money))
+            else: #player busts
+                print("Player"+str(index)+" busts. Dealer wins :(")
+                bet = player.getBet()
+                player.subMoney(bet)
+                new_money = player.getMoney()
+                print("Player"+str(index)+" has a balance of $"+str(new_money))
+             
 class Deck():
     def __init__(self):
         self.deck = []
@@ -60,6 +78,7 @@ class Deck():
         return self.deck
     def pop(self):
         if len(self.deck) < 30:
+            print("Reshuffling deck...")
             self.resetDeck(6)
             (self.deck).pop()
         else:
