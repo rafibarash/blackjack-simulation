@@ -59,10 +59,12 @@ def play_blackjack(game,deck):
         print("Player"+str(i)+"'s turn: ")
         p.play(i,deck) #Player plays his turn
         game.updatePlayer(p,i)
+    print("")
     dealer.playTurn(deck) #dealer's turn
     dhand = dealer.getHand()
     dhand_value = dealer.highestScore() #value of dealer's hand
     print("The dealer's hand is "+dhand)
+    print("The dealer's hand value is: "+str(dhand_value))
     for i in range(num_of_players): #loop to see who won
         p = game.getPlayer(i)
         phand_value = p.highestScore()

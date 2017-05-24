@@ -1,12 +1,3 @@
-#need game class
-    #isThereWinner method with player/dealer input to determine if winner. Also removes player from "players" list
-    #stillPlaying method, returns True/False if players still in game
-#need a deck class
-    #input x amount of decks
-    #shuffle method
-    #getNumberOfCards method
-    #giveCard method (use .pop)
-
 import random
 
 class Game():
@@ -48,6 +39,7 @@ class Game():
             new_money = player.getMoney()
             print("Player"+str(index)+" has a balance of $"+str(new_money))
         elif pvalue == dvalue and pvalue <= 21 and dvalue <= 21: #tie
+            new_money = player.getMoney()
             print("Player"+str(index)+" ties.")
             print("Player"+str(index)+" has a balance of $"+str(new_money))
         else: #bust
@@ -73,13 +65,14 @@ class Deck():
             for i in range(num):
                 self.deck += [ch]
     def shuffle(self):
+        print("Shuffling deck...")
         random.shuffle(self.deck)
     def getDeck(self):
         return self.deck
     def pop(self):
         if len(self.deck) < 30:
-            print("Reshuffling deck...")
             self.resetDeck(6)
+            self.shuffle()
             (self.deck).pop()
         else:
             return (self.deck).pop()
