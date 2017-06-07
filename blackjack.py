@@ -1,89 +1,22 @@
 #still need to do.
-    #write method for hit
-    #write method for double
     #write method for split
     #write loop for split==True in 'play' method
 
 from game import *
 from person import *
-
-def initialize_player_dealer(game):
-    '''initialize player/dealer'''
-    num_of_players = game.getNumOfPlayers()
-    for i in range(num_of_players): #loop initializes each player
-        p = "player"+str(i)
-        p = Player()
-        print("Initializing Player"+str(i))
-        game.addPlayer(p) #adds player to game list
-    dealer = Dealer() #initializes dealer
-    game.setDealer(dealer)
-    print("Initializing Dealer")
-    print("")
-
-def ask_for_bet(game):
-    '''asks each player for a bet'''
-    num_of_players = game.getNumOfPlayers()
-    for i in range(num_of_players): #loop asking each player for bets
-        bet = int(input("player"+str(i)+", enter your bet: "))
-        player = game.getPlayer(i)
-        player.setBet(bet)
-        game.updatePlayer(player,i)
-
-def give_player_dealer_hand(game,deck):
-    '''gives player and dealer a hand'''
-    #give player initial hand
-    num_of_players = game.getNumOfPlayers()
-    for i in range(num_of_players):
-        p = game.getPlayer(i)
-        p.clearHand()
-        for j in range(2): #loop gives player two cards from deck
-            card = deck.pop()
-            p.addCard(card)
-        game.updatePlayer(p,i)
-    #give dealer initial hand
-    dealer = game.getDealer()
-    dealer.clearHand()
-    for i in range(2):
-        card = deck.pop()
-        dealer.addCard(card)
-    game.setDealer(dealer)
-
-def play_blackjack(game,deck):
-    dealer = game.getDealer()
-    num_of_players = game.getNumOfPlayers()
-    dhand = dealer.getHand()
-    print("The Dealer's first card is: "+dhand[0])
-    for i in range(num_of_players): #loop for each player
-        p = game.getPlayer(i)
-        print("")
-        print("Player"+str(i)+"'s turn: ")
-        p.play(i,deck) #Player plays his turn
-        game.updatePlayer(p,i)
-    print("")
-    dealer.playTurn(deck) #dealer's turn
-    dhand = dealer.getHand()
-    dhand_value = dealer.highestScore() #value of dealer's hand
-    print("The dealer's hand is "+dhand)
-    print("The dealer's hand value is: "+str(dhand_value))
-    for i in range(num_of_players): #loop to see who won
-        p = game.getPlayer(i)
-        phand_value = p.highestScore()
-        print("")
-        print("Player"+str(i)+"'s hand value is: "+str(phand_value))
-        print("The dealer's hand value is: "+str(dhand_value))
-        game.winner(p,dealer,i) #Prints winners and new account value
-        
+from functions import *
+       
 def main():
     '''main function for simulating a game of blackjack'''
-    game = Game()
-    deck = Deck()
-    deck.resetDeck(6)
-    deck.shuffle()
+    game = Game() #initialize game class
+    deck = Deck() #initialize deck
+    deck.resetDeck(6) #creates pile of 6 decks
+    deck.shuffle() #shuffles deck
 
-    num_of_players = int(input("Enter number of players: ")) #variable, number of players
-    game.setNumOfPlayers(num_of_players)
+    num_of_players = int(input("Enter number of players: ")) #number of players
+    game.setNumOfPlayers(num_of_players) #enters number of players in game
     
-    initialize_player_dealer(game)
+    initialize_player_dealer(game) #initializes each player and dealer
 
     #Loop to check if still playing
     done = False
@@ -96,10 +29,12 @@ def main():
         if play == 'n': #don't play round
             done = True
         else: #play round
+            print('')
             print("Round "+str(rounds)+"...")
-            give_player_dealer_hand(game,deck)
-            ask_for_bet(game)
+            give_player_dealer_hand(game,deck) #gives hand to players and dealer
+            playerList = game.getPlayerList()
+            for i in range(num_of_players): #tells each player his balance
+                print("Player"+str(i)+" has a balance of $"+str(playerList[i].getMoney()))
+            ask_for_bet(game) #asks each player for a bet
             play_blackjack(game,deck) #play game
-            rounds += 1            
-                     
-main()           
+            rounds += 1 #end of round
