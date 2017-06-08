@@ -39,11 +39,12 @@ class Person():
 class Player(Person):
     def __init__(self):
         self.bet = 0
-        self.split_bet = 0
         self.money = 1000
         self.blackjack = False
         self.hand = ''
-        self.split_hand = ''
+        self.split = False #for split hands...
+        self.split_hand = '' #for split hands...
+        self.split_bet = 0 #for split hands...
         super().__init__()
     def setBet(self,bet):
         '''sets bet for current turn'''
@@ -70,17 +71,22 @@ class Player(Person):
             self.bet *= 2
             card = deck.pop()
             self.addCard(card)
-    def split(self,deck):
-        '''creates two hands for player'''
-        if self.hand[0] == self.hand[1]:
-            self.split_hand = (self.hand).pop()
-            self.split_bet = self.bet
-            return True
-        else:
-            return False
+    def checkSplit(self):
+        '''returns 1 if player split, 0 otherwise'''
+        if self.split is True: #player split
+            return "true"
+        else: #player did not split
+            return "false"
     def getSplitHand(self):
         '''returns player's split hand'''
         return self.split_hand
+    def clearSplitHand(self):
+        '''clears split hand'''
+        self.split_hand = ''
+    def splitHit(self,deck):
+        '''hits deck for split hand'''
+        card = deck.pop()
+        self.split_hand += card
     def splitHighestScore(self):
         '''returns best blackjack score of split hand'''
         score = 0
@@ -102,13 +108,6 @@ class Player(Person):
             score -= 10
             aces -= 1
         return score
-    def clearSplitHand(self):
-        '''clears split hand'''
-        self.split_hand = ''
-    def splitHit(self,deck):
-        '''hits deck for split hand'''
-        card = deck.pop()
-        self.split_hand += card
     def blackjack(self):
         '''returns blackjack value of player'''
         return self.blackjack
@@ -116,7 +115,6 @@ class Player(Person):
         '''plays all turns for one player'''
         turn = 0
         endTurn = False
-        split = False
         while endTurn is False: #loop for each player turn
             hand = self.getHand()
             handValue = self.highestScore()
@@ -126,7 +124,7 @@ class Player(Person):
                 print("Player"+str(i)+", your hand is: "+hand[0]+', '+hand[1])
                 print("You have a blackjack!")
                 endTurn = True
-            elif (handValue <= 21) and (endTurn is False) and (split is False): #play turn
+            elif (handValue <= 21) and (endTurn is False) and (self.split is False): #play turn
                 #decide whether to hit/stay/double/split
                 print("Player"+str(i)+", your hand is: "+hand)
                 print("Player"+str(i)+", your hand value is: "+str(handValue))    
@@ -134,51 +132,64 @@ class Player(Person):
                 if decision == "hit": #hit
                     self.hit(deck)
                 elif decision == "double": #double down
-                    self.doubleDown(deck)
-                    hand = self.getHand()
-                    handValue = self.highestScore()
-                    print("Player"+str(i)+", your hand is: "+str(hand))
-                    print("Player"+str(i)+", your hand value is: "+str(handValue))
-                    endTurn = True
+                    if turn == 0: #check to see if player can double down                      
+                        self.doubleDown(deck)
+                        hand = self.getHand()
+                        handValue = self.highestScore()
+                        print("Player"+str(i)+", your hand is: "+str(hand))
+                        print("Player"+str(i)+", your hand value is: "+str(handValue))
+                        endTurn = True
+                    else: #if player can't double, repeat turn
+                        print("You are not able to double down. It is not the first turn.")
                 elif decision == "split": #split
-                    success_split = self.split(deck)
-                    if success_split is True:
-                        split = True
+                    if turn == 0 and hand[0] == hand[1]:
+                        self.split = True
                     else:
-                        print("You are not able to split with this hand")
+                        print("You are not able to split with this hand.")
                 else: #stay
                     endTurn = True
-            elif split is True: #runs turn for both hands after a split
-                original_finished = False
-                while not original_finished:
-                    hand = self.getHand()
-                    handValue = self.highestScore()
-                    if handValue <= 21:
-                        print("Player"+str(i)+", your first hand is: "+hand)
-                        print("Player"+str(i)+", your first hand value is: "+str(handValue))
+            elif self.split is True: #runs turn for both hands after a split
+                old_hand = self.getHand()
+                self.hand = old_hand[0] #starts off first hand
+                self.split_hand = old_hand[1] #starts off split hand
+
+                ### Loop to play for first hand
+                first_hand_done = False
+                while first_hand_done is False:
+                    first_hand = self.getHand() #get first hand
+                    first_hand_value = self.highestScore() #get first hand value
+                    if first_hand_value <= 21: #play if didn't bust
+                        print("Player"+str(i)+", your first hand is: "+first_hand)
+                        print("Player"+str(i)+", your first hand value is: "+str(first_hand_value))
                         decision = str(input("Will you hit or stay? (please enter exact word): "))
-                        if decision == "hit":
+                        if decision == "hit": #hit
                             self.hit(deck)
                         else: #stay
-                            original_finished = True
+                            first_hand_done = True
                     else: #bust
-                        print("Player"+str(i)+", your first hand has busted.")
-                        original_finished = True                      
-                split_finished = False
-                while not split_finished:
-                    hand = self.getSplitHand()
-                    handValue = self.splitHighestScore()
-                    if handValue <= 21:
-                        print("Player"+str(i)+", your second hand is: "+hand)
-                        print("Player"+str(i)+", your second hand value is: "+str(handValue))
+                        print("Player"+str(i)+", your first hand is: "+first_hand)
+                        print("Player"+str(i)+", your first hand value is: "+str(first_hand_value))
+                        print("Player"+str(i)+", your first hand has busted. :(")
+                        first_hand_done = True
+
+                ### Loop to play for split hand
+                split_hand_done = False
+                while split_hand_done is False:
+                    split_hand = self.getSplitHand() #get split hand
+                    split_hand_value = self.splitHighestScore() #get split hand value
+                    if split_hand_value <= 21: #play if didn't bust
+                        print("Player"+str(i)+", your second hand is: "+split_hand)
+                        print("Player"+str(i)+", your second hand value is: "+str(split_hand_value))
                         decision = str(input("Will you hit or stay? (please enter exact word): "))
-                        if decision == "hit":
+                        if decision == "hit": #hit
                             self.splitHit(deck)
                         else: #stay
-                            split_finished = True
+                            split_hand_done = True
                     else: #bust
                         print("Player"+str(i)+", your second hand has busted.")
-                        split_finished = True                      
+                        split_hand_done = True
+                endTurn = True #split turn is done
+                
             else: #bust
                 endTurn = True
                 print("Player"+str(i)+", your hand is: "+hand)

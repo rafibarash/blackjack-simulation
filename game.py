@@ -32,10 +32,8 @@ class Game():
     def getNumOfPlayers(self):
         '''returns number of players'''
         return self.num_of_players
-    def winner(self,player,dealer,index):
-        '''checks winner of a player vs dealer'''
-        pvalue = player.highestScore() #highest score of player
-        dvalue = dealer.highestScore() #highest score of dealer
+    def winner(self,player,pvalue,dvalue,index):
+        '''checks winner of a player's hand value vs dealer's hand value'''
         if pvalue > dvalue and pvalue <= 21: #player wins
             print("Player"+str(index)+" wins!")
             bet = player.getBet()

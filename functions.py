@@ -29,6 +29,7 @@ def give_player_dealer_hand(game,deck):
     for i in range(num_of_players): #give each player initial hand
         p = game.getPlayer(i)
         p.clearHand()
+        p.clearSplitHand()
         for j in range(2): #loop gives player two cards from deck
             card = deck.pop()
             p.addCard(card)
@@ -61,7 +62,21 @@ def play_blackjack(game,deck):
     for i in range(num_of_players): #loop to see who won
         p = game.getPlayer(i)
         phand_value = p.highestScore()
-        print("")
-        print("Player"+str(i)+"'s hand value is: "+str(phand_value))
-        print("The dealer's hand value is: "+str(dhand_value))
-        game.winner(p,dealer,i) #decides winner of player vs dealer
+        
+        split = p.checkSplit() #checks to see if player split
+        if split == "false": #player did not split
+            print("")
+            print("Player"+str(i)+"'s hand value is: "+str(phand_value))
+            print("The dealer's hand value is: "+str(dhand_value))
+            game.winner(p,phand_value,dhand_value,i) #decides winner of player vs dealer 
+        else: #player split
+            print("")
+            print("Player"+str(i)+"'s first hand value is: "+str(phand_value))
+            print("The dealer's hand value is: "+str(dhand_value))
+            game.winner(p,phand_value,dhand_value,i) #decides winner of first hand
+            
+            p_split_value = p.splitHighestScore()
+            print("Player"+str(i)+"'s second hand value is: "+str(p_split_value))
+            print("The dealer's hand value is: "+str(dhand_value))
+            game.winner(p,p_split_value,dhand_value,i) #decides winner of second hand
+            
