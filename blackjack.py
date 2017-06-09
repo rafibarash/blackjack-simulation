@@ -1,7 +1,3 @@
-#still need to do.
-    #write method for split
-    #write loop for split==True in 'play' method
-
 from game import *
 from person import *
 from functions import *
@@ -12,7 +8,7 @@ def main():
     deck = Deck() #initialize deck
     deck.resetDeck(6) #creates pile of 6 decks
     deck.shuffle() #shuffles deck
-
+    
     num_of_players = int(input("Enter number of players: ")) #number of players
     game.setNumOfPlayers(num_of_players) #enters number of players in game
     

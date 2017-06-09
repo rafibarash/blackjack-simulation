@@ -1,6 +1,7 @@
 #have all in method
 #have method that kicks lo$$ers out of game
 #also take out any characters that aren't numbers for bet
+#if you split aces, autimatically end turn
 
 class Person():
     def __init__(self):
@@ -19,8 +20,10 @@ class Person():
                 score += 10
             elif ch == 'A':
                 score += 11
-            else:
+            elif ch.isdigit() is True:
                 score += int(ch)
+            else:
+                pass
         aces = (self.hand).count('A')
         while score > 21 and aces != 0:
             score -= 10
@@ -209,5 +212,4 @@ class Dealer(Person):
             else: #add card to dealer's hand
                 card = deck.pop()
                 self.addCard(card)
-                dhand = self.getHand()
                 print("Dealer picks card...")

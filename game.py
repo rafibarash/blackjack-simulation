@@ -57,12 +57,12 @@ class Game():
 class Deck():
     def __init__(self):
         self.deck = []
-    def resetDeck(self,num):
+    def resetDeck(self,num_of_decks):
         '''creates pile of decks'''
         cardsList = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
         self.deck = []
         for ch in cardsList:
-            for i in range(num):
+            for i in range(num_of_decks):
                 self.deck += [ch]
     def shuffle(self):
         '''shuffles deck'''
