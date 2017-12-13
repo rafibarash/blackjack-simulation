@@ -20,6 +20,9 @@ class Game():
     def getPlayer(self,index):
         '''returns a player in player list'''
         return self.players[index]
+    def deletePlayer(self,index):
+        '''deletes player in player list'''
+        self.players.pop(index)
     def updatePlayerList(self,newPlayerList):
         '''replaces player list'''
         self.players = newPlayerList
@@ -60,7 +63,6 @@ class Deck():
     def resetDeck(self,num_of_decks):
         '''creates pile of decks'''
         cardsList = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
-        self.deck = []
         for ch in cardsList:
             for i in range(num_of_decks):
                 self.deck += [ch]

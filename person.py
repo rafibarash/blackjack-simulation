@@ -77,6 +77,7 @@ class Player(Person):
     def checkSplit(self):
         '''returns 1 if player split, 0 otherwise'''
         if self.split is True: #player split
+            self.split = False
             return "true"
         else: #player did not split
             return "false"

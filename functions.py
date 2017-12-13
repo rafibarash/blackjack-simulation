@@ -5,7 +5,6 @@ def initialize_player_dealer(game):
     '''initialize player/dealer'''
     num_of_players = game.getNumOfPlayers()
     for i in range(num_of_players): #loop initializes each player
-        p = "player"+str(i)
         p = Player()
         print("Initializing Player"+str(i))
         game.addPlayer(p) #adds player to game list
@@ -49,10 +48,15 @@ def play_blackjack(game,deck):
     print("The Dealer's first card is: "+dhand[0])
     for i in range(num_of_players): #loop for each player
         p = game.getPlayer(i) #get's player
-        print("")
-        print("Player"+str(i)+"'s turn: ")
-        p.play(i,deck) #Player plays his turn
-        game.updatePlayer(p,i) #updates player in game's player list
+        if p.money < 0:
+            print("Sorry player"+str(i)+", you have a negative balance. Bye bitch.")
+            game.deletePlayer(i)
+            num_of_players = game.getNumOfPlayers() #get player list
+        else:
+            print("")
+            print("Player"+str(i)+"'s turn: ")
+            p.play(i,deck) #Player plays his turn
+            game.updatePlayer(p,i) #updates player in game's player list
     print("")
     dealer.playTurn(deck) #dealer's turn
     dhand = dealer.getHand() #gets dealer's new hand
