@@ -1,78 +1,95 @@
 import random
 
+
 class Game():
     def __init__(self):
         self.players = []
         self.dealer = None
         self.num_of_players = 0
-    def setDealer(self,dealer):
+
+    def setDealer(self, dealer):
         '''sets dealer'''
         self.dealer = dealer
+
     def getDealer(self):
         '''returns dealer'''
         return self.dealer
-    def addPlayer(self,player):
+
+    def addPlayer(self, player):
         '''adds player to player list'''
         self.players += [player]
-    def updatePlayer(self,player,index):
+
+    def updatePlayer(self, player, index):
         '''updates player in player list'''
         self.players[index] = player
-    def getPlayer(self,index):
+
+    def getPlayer(self, index):
         '''returns a player in player list'''
         return self.players[index]
-    def deletePlayer(self,index):
+
+    def deletePlayer(self, index):
         '''deletes player in player list'''
         self.players.pop(index)
-    def updatePlayerList(self,newPlayerList):
+
+    def updatePlayerList(self, newPlayerList):
         '''replaces player list'''
         self.players = newPlayerList
+
     def getPlayerList(self):
         '''returns player list'''
         return self.players
-    def setNumOfPlayers(self,num):
+
+    def setNumOfPlayers(self, num):
         '''number of players in game'''
         self.num_of_players = num
+
     def getNumOfPlayers(self):
         '''returns number of players'''
         return self.num_of_players
-    def winner(self,player,pvalue,dvalue,index):
+
+    def winner(self, player, pvalue, dvalue, index):
         '''checks winner of a player's hand value vs dealer's hand value'''
-        if pvalue > dvalue and pvalue <= 21: #player wins
-            print("Player"+str(index)+" wins!")
+        if pvalue > dvalue and pvalue <= 21:  # player wins
+            print("Player" + str(index) + " wins!")
             bet = player.getBet()
-            player.addMoney(bet) #adds bet to player's account
-        elif dvalue > pvalue and dvalue <= 21: #dealer wins
-            print("Player"+str(index)+" loses :(")
+            player.addMoney(bet)  # adds bet to player's account
+        elif dvalue > pvalue and dvalue <= 21:  # dealer wins
+            print("Player" + str(index) + " loses :(")
             bet = player.getBet()
-            player.subMoney(bet) #subtracts bet from player's account
-        elif pvalue == dvalue and pvalue <= 21 and dvalue <= 21: #tie
-            print("Player"+str(index)+" ties.")
-        else: #bust
-            if pvalue <= 21 and dvalue > 21: #dealer busts and player doesn't
-                print("Dealer busts. Player"+str(index)+" wins!")
+            player.subMoney(bet)  # subtracts bet from player's account
+        elif pvalue == dvalue and pvalue <= 21 and dvalue <= 21:  # tie
+            print("Player" + str(index) + " ties.")
+        else:  # bust
+            if pvalue <= 21 and dvalue > 21:  # dealer busts and player doesn't
+                print("Dealer busts. Player" + str(index) + " wins!")
                 bet = player.getBet()
-                player.addMoney(bet) #adds bet to player's account
-            else: #player busts
-                print("Player"+str(index)+" busts. Dealer wins :(")
+                player.addMoney(bet)  # adds bet to player's account
+            else:  # player busts
+                print("Player" + str(index) + " busts. Dealer wins :(")
                 bet = player.getBet()
-                player.subMoney(bet) #subtracts bet from player's account
-             
+                player.subMoney(bet)  # subtracts bet from player's account
+
+
 class Deck():
     def __init__(self):
         self.deck = []
-    def resetDeck(self,num_of_decks):
+
+    def resetDeck(self, num_of_decks):
         '''creates pile of decks'''
-        cardsList = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
+        cardsList = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
         for ch in cardsList:
             for i in range(num_of_decks):
                 self.deck += [ch]
+
     def shuffle(self):
         '''shuffles deck'''
         print("Shuffling deck...")
         random.shuffle(self.deck)
+
     def getDeck(self):
         '''returns deck'''
         return self.deck
+
     def pop(self):
         '''pops a card from deck'''
         if len(self.deck) < 30:
